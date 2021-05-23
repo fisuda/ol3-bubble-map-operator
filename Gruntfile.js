@@ -23,7 +23,7 @@ module.exports = function (grunt) {
             },
             grunt: {
                 options: {
-                    configFile: '.eslintrc-node'
+                    configFile: 'src/.eslintrc'
                 },
                 src: 'Gruntfile.js',
             },

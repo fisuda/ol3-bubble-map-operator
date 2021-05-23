@@ -2,7 +2,7 @@
  * ol3-bubble-map
  * https://github.com/lets-fiware/ol3-bubble-map-operator
  *
- * Copyright (c) 2020 Kazuhito Suda
+ * Copyright (c) 2020-2021 Kazuhito Suda
  * Licensed under the MIT license.
  */
 
@@ -10,7 +10,7 @@
 
     "use strict";
 
-    var parseInputEndpointData = function parseInputEndpointData(data) {
+    const parseInputEndpointData = function parseInputEndpointData(data) {
         if (typeof data === "string") {
             try {
                 data = JSON.parse(data);
@@ -26,7 +26,7 @@
         return data;
     };
 
-    var createBubble = function createBubble(entities) {
+    const createBubble = function createBubble(entities) {
         var radiusAttr = MashupPlatform.prefs.get("radiusAttr");
         if (!radiusAttr) {
             throw new MashupPlatform.wiring.EndpointTypeError();
@@ -76,7 +76,7 @@
         });
     }
 
-    var callBack = function callBack(data) {
+    const callBack = function callBack(data) {
         var entities = parseInputEndpointData(data);
 
         entities = createBubble(entities);
@@ -86,16 +86,17 @@
         }
     }
 
-    /* TODO
-     * this if is required for testing, but we have to search a cleaner way
-     */
-    if (window.MashupPlatform != null) {
-        MashupPlatform.wiring.registerCallback("entityInput", callBack);
+    const OL3BubbleMap = function OL3BubbleMap() {
+
     }
 
-    /* test-code */
-    window.callBack = callBack;
-    window.createBubble = createBubble;
-    /* end-test-code */
+    OL3BubbleMap.prototype.init = function init() {
+        MashupPlatform.wiring.registerCallback("entityInput", callBack);
+    };
+
+    window.OL3BubbleMap = OL3BubbleMap;
+
+    const ol3BubbleMap = new OL3BubbleMap();
+    window.addEventListener("DOMContentLoaded", ol3BubbleMap.init.bind(ol3BubbleMap), false);
 
 })();
